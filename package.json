@@ -1,0 +1,25 @@
+{
+  "name": "questjs",
+  "version": "1.0.0",
+  "description": "Node package for framework for creating parser-based text adventures QuestJS (Quest 6)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sablesoft/npm-questjs.git"
+  },
+  "keywords": [
+    "questjs",
+    "text",
+    "adventure",
+    "fiction"
+  ],
+  "author": "Raman Sobal",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sablesoft/npm-questjs/issues"
+  },
+  "homepage": "https://github.com/sablesoft/npm-questjs#readme"
+}
