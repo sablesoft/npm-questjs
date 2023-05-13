@@ -6,6 +6,13 @@
 
 import {game, io, lang, sentenceCase, world, player} from "../index.js";
 
+export function run() {
+    world.init()
+    settings.performanceLog('World initiated')
+    io.init()
+    settings.performanceLog('io.init completed')
+}
+
 export const settings = {
   performanceLogStartTime:performance.now(),
 
@@ -164,7 +171,6 @@ export const settings = {
     settings.loadCssFile(settings.folder + settings.styleFile + '.css', doc, path)
   },
 
-
   loadCssFile:function(filename, doc = document, path = '') {
     const link = document.createElement( "link" )
     link.href = path + filename
@@ -173,95 +179,6 @@ export const settings = {
     link.media = "screen,print"
     doc.head.appendChild(link)
   },
-
-  loadFavicon:function() {
-    if (!settings.favicon) settings.favicon = settings.iconsFolder + 'favicon.png'
-    const link = document.createElement('link')
-    link.id = 'dynamic-favicon'
-    link.rel = 'shortcut icon'
-    link.href = settings.favicon
-    const oldLink = document.getElementById('dynamic-favicon')
-    if (oldLink) document.head.removeChild(oldLink)
-    document.head.appendChild(link)
-  },
-
-  scriptLoading:undefined,
-  scriptToLoad:[],
-  scriptLoadLogging:false,
-  scriptDoc:undefined,
-
-  loadScript:function(filename, doc = document) {
-    settings.scriptDoc = doc
-    settings.scriptToLoad.push(filename)
-    if (!settings.scriptLoading) settings.scriptOnLoad()
-  },
-
-  scriptOnLoad:function() {
-    if (settings.scriptLoading && settings.scriptLoadLogging) console.log('Loaded ' + settings.scriptLoading)
-    if (settings.scriptToLoad.length === 0) {
-      if (settings.scriptLoadLogging) console.log('All script files loaded')
-      settings.performanceLog('Scripts loaded')
-
-      // This is currently untested !!!!
-      if (settings.soundFiles) {
-        const main = document.querySelector('#main')
-        for (let el of settings.soundFiles) {
-          const audio = document.createElement('audio')
-          audio.seAttribute('id', el)
-          audio.seAttribute('src',settings.soundsFolder + el + settings.soundsFileExt)
-          main.appendChild(audio)
-        }
-        settings.performanceLog('Audio loaded')
-      }
-
-      // todo - move starting point in another place:
-      world.init()
-      settings.performanceLog('World initiated')
-      io.init()
-      settings.performanceLog('io.init completed')
-      return
-    }
-    settings.scriptLoading = settings.scriptToLoad.shift()
-    if (settings.scriptLoadLogging) console.log('Loading ' + settings.scriptLoading)
-    const myScript = settings.scriptDoc.createElement("script")
-    myScript.setAttribute("src", settings.scriptLoading)
-    myScript.onload = settings.scriptOnLoad
-    myScript.onerror = function() {
-      console.log("Failed to load file \"" + settings.scriptLoading + "\".")
-      console.log("Check the file and folder actually exist.")
-    }
-    settings.scriptDoc.head.appendChild(myScript)
-  },
-
-  // writeScript:function(folder) {
-  //   settings.folder = folder ? folder + '/' : ''
-  //
-  //   settings.performanceLog('Load CSS files')
-  //   settings.loadCssFiles()
-  //   settings.loadFavicon()
-  //
-  //   settings.performanceLog('Queue files')
-  //   if (settings.tests && settings.playMode === 'dev') {
-  //     settings.loadScript('lib/test-lib.js')
-  //     settings.loadScript(settings.folder + 'tests.js')
-  //   }
-  //   settings.loadScript((folder ? 'lang/' : '' ) + settings.lang + '.js')
-  //   if (settings.customExits) {
-  //     settings.loadScript(settings.folder + settings.customExits + '.js')
-  //   }
-  //   for (let file of settings.libraries) {
-  //     settings.loadScript((folder ? 'lib/' : '' ) + file + '.js')
-  //   }
-  //   for (let lib of settings.customLibraries) {
-  //     for (let file of lib.files) {
-  //       settings.loadScript((folder ? lib.folder + '/' : '') + file + '.js')
-  //     }
-  //   }
-  //   for (let file of settings.files) {
-  //     settings.loadScript(settings.folder + file + '.js')
-  //   }
-  //   settings.performanceLog('Files queued')
-  // }
 }
 
 //settings.scriptLoadLogging = true
