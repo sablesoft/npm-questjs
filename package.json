@@ -27,7 +27,8 @@
         "adventure",
         "fiction"
     ],
-    "author": "Raman Sobal",
+    "author": "ThePix",
+    "contributors": ["Raman Sobal"],
     "license": "MIT",
     "bugs": {
         "url": "https://github.com/sablesoft/npm-questjs/issues"
