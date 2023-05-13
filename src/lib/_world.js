@@ -37,6 +37,10 @@ export function createItem() {
     })
     delete o.convTopics
   }
+  if (o.player && !game.player) {
+      setPlayer(o);
+  }
+
   return o
 }
 
@@ -174,27 +178,6 @@ export function createObject(name, listOfHashes) {
 }
 
 let region;
-w._player = null;
-w._loc = null;
-
-export function player() {
-    if (!w._player) {
-        return errormsg("No player object found. This is probably due to an error in the data file where the player object is defined, but could be because you have not set one.");
-    }
-
-    return w._player;
-}
-export function setPlayer(char) {
-    w._player = char;
-}
-
-export function loc() {
-    if (!w._loc) {
-        return errormsg("Something wrong - current location not found!");
-    }
-
-    return w._loc;
-}
 
 /*
 This can be considered a stateless controller for the game world.
@@ -240,11 +223,8 @@ export const world = {
   // Initialisation
 
   init:function() {
-    settings.performanceLog('Start world.init')
-    // Initialise the player
-    for (let key in w) {
-      if (w[key].player) { setPlayer(w[key]); }
-    }
+    settings.performanceLog('Start world.init');
+
     // check player found:
     player();
 
@@ -451,9 +431,9 @@ export const world = {
             player().loc + "', which does not exist.") + " This is may be because of an error in one of the .js files; the browser has hit the error and stopped at that point, before getting to where the player is set. Is there another error above this one? If so, that i the real problem.")
       }
     }
-    w._loc = w[player().loc]
+    game.loc = w[player().loc];
 
-    world.scopeSnapshot()
+    world.scopeSnapshot();
   },
 
   resetPauses:function() {
@@ -594,6 +574,8 @@ export const world = {
 }
 
 export const game = {
+  player: null,
+  loc: null,
   turnCount:0,
   elapsedTime:0,
   elapsedRealTime:0,
@@ -620,6 +602,24 @@ export const game = {
   saveLoadExclude:function(att) {
     return (att === 'player' || typeof this[att] === 'function' || typeof this[att] === 'object')
   },
+}
+
+export function loc() {
+    if (!game.loc) {
+        return errormsg("Something wrong - current location not found!");
+    }
+
+    return game.loc;
+}
+export function player() {
+    if (!game.player) {
+        return errormsg("No player object found. This is probably due to an error in the data file where the player object is defined, but could be because you have not set one.");
+    }
+
+    return game.player;
+}
+export function setPlayer(char) {
+    game.player = char;
 }
 
 export class Exit {

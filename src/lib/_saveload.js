@@ -4,7 +4,7 @@
 
 import {
     _msg, metamsg, clearScreen, cloneObject, endTurnUI, errormsg, Exit,
-    game, io, lang, saveAs, settings, tp, util, world
+    game, io, lang, saveAs, settings, tp, util, world, w
 } from '../index.js';
 
 // Should all be language neutral
