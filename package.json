@@ -1,34 +1,40 @@
 {
-  "name": "questjs",
-  "version": "1.0.0",
-  "description": "Module for framework for creating parser-based text adventures QuestJS (Quest 6)",
-  "type": "module",
-  "files": [
-    "dist"
-  ],
+    "name": "questjs",
+    "version": "1.0.0",
+    "description": "Module for framework for creating parser-based text adventures QuestJS (Quest 6)",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
     "main": "dist/quest.umd.cjs",
     "module": "dist/quest.js",
-  "scripts": {
-    "build": "vite build"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/sablesoft/npm-questjs.git"
-  },
-  "keywords": [
-    "questjs",
-    "text",
-    "adventure",
-    "fiction"
-  ],
-  "author": "Raman Sobal",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/sablesoft/npm-questjs/issues"
-  },
-  "homepage": "https://github.com/sablesoft/npm-questjs#readme",
-  "devDependencies": {
-    "path": "^0.12.7",
-    "vite": "^4.3.5"
-  }
+    "exports": {
+        ".": {
+            "import": "./dist/quest.js",
+            "require": "./dist/quest.umd.cjs"
+        }
+    },
+    "scripts": {
+        "build": "vite build"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/sablesoft/npm-questjs.git"
+    },
+    "keywords": [
+        "questjs",
+        "text",
+        "adventure",
+        "fiction"
+    ],
+    "author": "Raman Sobal",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/sablesoft/npm-questjs/issues"
+    },
+    "homepage": "https://github.com/sablesoft/npm-questjs#readme",
+    "devDependencies": {
+        "path": "^0.12.7",
+        "vite": "^4.3.5"
+    }
 }
