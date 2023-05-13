@@ -3,7 +3,7 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
     build: {
-        minify: false,
+        minify: true,
         manifest: true,
         emptyOutDir: false,
         outDir: "dist",

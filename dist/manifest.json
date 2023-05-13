@@ -1,0 +1,7 @@
+{
+  "src/index.js": {
+    "file": "quest.umd.cjs",
+    "isEntry": true,
+    "src": "src/index.js"
+  }
+}
