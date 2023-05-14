@@ -1339,118 +1339,111 @@ io.msgInputText = function(s) {
 io.savedCommands = ['help'];
 io.savedCommandsPos = 0;
 
+/**
+ *
+ * @param event
+ * @param input
+ */
+export function keyboardHandler(event) {
+    console.debug('KeyboardEvent', event);
+    if (io.keydownFunctions.length) {
+        const fn = io.keydownFunctions.pop()
+        return fn(event);
+    }
+    const keycode = (event.keyCode ? event.keyCode : event.which)
+    if (keycode === 13) {
+        // enter
+        if (event.ctrlKey && (settings.playMode === 'dev' || settings.playMode === 'beta')) {
+            parser.parse("script show")
+        } else {
+            const s = document.querySelector('#textbox').value;
+            io.msgInputText(s);
+            if (s) {
+                if (io.savedCommands[io.savedCommands.length - 1] !== io.inputValue && !io.doNotSaveInput) {
+                    io.savedCommands.push(s)
+                }
+                io.savedCommandsPos = io.savedCommands.length;
+                parser.parse(s);
+                if (io.doNotEraseLastCommand) {
+                    io.doNotEraseLastCommand = false
+                } else {
+                    document.querySelector('#textbox').value = ''
+                }
+            }
+        }
+    }
+    if (keycode === 38) {
+        // up arrow
+        io.savedCommandsPos -= 1;
+        if (io.savedCommandsPos < 0) { io.savedCommandsPos = 0; }
+        document.querySelector('#textbox').value = io.savedCommands[io.savedCommandsPos]
+        // Get cursor to end of text
+        const el = document.querySelector('#textbox');
+        if (el.setSelectionRange) {
+            setTimeout(function() {el.setSelectionRange(9999, 9999); }, 0);
+        } else if (typeof el.selectionStart == "number") {
+            el.selectionStart = el.selectionEnd = el.value.length;
+        } else if (typeof el.createTextRange != "undefined") {
+            el.focus();
+            let range = el.createTextRange();
+            range.collapse(false);
+            range.select();
+        }
+    }
+    if (keycode === 40) {
+        // down arrow
+        io.savedCommandsPos += 1;
+        if (io.savedCommandsPos >= io.savedCommands.length) { io.savedCommandsPos = io.savedCommands.length - 1; }
+        document.querySelector('#textbox').value = io.savedCommands[io.savedCommandsPos]
+    }
+    if (keycode === 27) {
+        // ESC
+        document.querySelector('#textbox').value = null;
+    }
+    if (!io.disableLevel) {
+        // disable most special keys - all but the enter key
+        if (settings.customKeyResponses) {
+            if (settings.customKeyResponses(keycode, event)) return false
+        }
+        for (let exit of lang.exit_list) {
+            if (exit.key && exit.key === keycode) {
+                io.msgInputText(exit.name);
+                parser.parse(exit.name);
+                document.querySelector('#textbox').value = ''
+                event.stopPropagation();
+                event.preventDefault();
+                return false;
+            }
+        }
+        if (keycode === 123 && settings.playMode === 'play') return false
+        if (event.ctrlKey && event.shiftKey && keycode === 73 && settings.playMode === 'play') return false
+        if (event.ctrlKey && event.shiftKey && keycode === 74 && settings.playMode === 'play') return false
+
+        if (keycode === 96 && (settings.playMode === 'dev' || settings.playMode === 'beta')){
+            if (event.ctrlKey && event.altKey) {
+                parser.parse("wt b")
+            } else if (event.altKey) {
+                parser.parse("wt a")
+            } else if (event.ctrlKey) {
+                parser.parse("wt c")
+            } else {
+                parser.parse("test")
+            }
+            setTimeout(function() { document.querySelector('#textbox').value = '' }, 1);
+        }
+        if (keycode === 90 && event.ctrlKey) {
+            parser.parse("undo")
+        }
+    }
+}
+
 // Called from scriptOnLoad in _settings.js, if there are no more scripts to load
 io.init = function() {
   settings.performanceLog('Start io.onload')
   if (settings.playMode === 'play') window.oncontextmenu = function () { return false }
-  document.querySelector("#fileDialog").onchange = saveLoad.loadGameAsFile
 
-  document.addEventListener('keydown', function(event){
-    if (io.keydownFunctions.length) {
-      const fn = io.keydownFunctions.pop()
-      fn(event)
-      return
-    }
-    const keycode = (event.keyCode ? event.keyCode : event.which)
-    if (keycode === 13){
-      // enter
-      if (event.ctrlKey && (settings.playMode === 'dev' || settings.playMode === 'beta')) {
-        parser.parse("script show")
-      }
-      else {
-        const s = document.querySelector('#textbox').value;
-        io.msgInputText(s);
-        if (s) {
-          if (io.savedCommands[io.savedCommands.length - 1] !== s && !io.doNotSaveInput) {
-            io.savedCommands.push(s)
-          }
-          io.savedCommandsPos = io.savedCommands.length;
-          parser.parse(s);
-          if (io.doNotEraseLastCommand) {
-            io.doNotEraseLastCommand = false
-          }
-          else {
-            document.querySelector('#textbox').value = ''
-          }
-        }
-      }
-    }
-    if (keycode === 38){
-      // up arrow
-      io.savedCommandsPos -= 1;
-      if (io.savedCommandsPos < 0) { io.savedCommandsPos = 0; }
-      document.querySelector('#textbox').value = io.savedCommands[io.savedCommandsPos]
-      // Get cursor to end of text
-      const el = document.querySelector('#textbox')
-      if (el.setSelectionRange) {
-        setTimeout(function() {el.setSelectionRange(9999, 9999); }, 0);
-      }
-      else if (typeof el.selectionStart == "number") {
-        el.selectionStart = el.selectionEnd = el.value.length;
-      }
-      else if (typeof el.createTextRange != "undefined") {
-        el.focus();
-        let range = el.createTextRange();
-        range.collapse(false);
-        range.select();
-      }
-    }
-    if (keycode === 40){
-      // down arrow
-      io.savedCommandsPos += 1;
-      if (io.savedCommandsPos >= io.savedCommands.length) { io.savedCommandsPos = io.savedCommands.length - 1; }
-      document.querySelector('#textbox').value = io.savedCommands[io.savedCommandsPos]
-    }
-    if (keycode === 27){
-      // ESC
-      document.querySelector('#textbox').value = ''
-    }
-    if (!io.disableLevel) {
-      // disable most special keys - all but the enter key
-      if (settings.customKeyResponses) {
-        if (settings.customKeyResponses(keycode, event)) return false
-      }
-      for (let exit of lang.exit_list) {
-        if (exit.key && exit.key === keycode) {
-          io.msgInputText(exit.name);
-          parser.parse(exit.name);
-          document.querySelector('#textbox').value = ''
-          event.stopPropagation();
-          event.preventDefault();
-          return false;
-        }
-      }
-      if (keycode === 123 && settings.playMode === 'play') return false
-      if (event.ctrlKey && event.shiftKey && keycode === 73 && settings.playMode === 'play') return false
-      if (event.ctrlKey && event.shiftKey && keycode === 74 && settings.playMode === 'play') return false
-
-      if (keycode === 96 && (settings.playMode === 'dev' || settings.playMode === 'beta')){
-        if (event.ctrlKey && event.altKey) {
-          parser.parse("wt b")
-        }
-        else if (event.altKey) {
-          parser.parse("wt a")
-        }
-        else if (event.ctrlKey) {
-          parser.parse("wt c")
-        }
-        else {
-          parser.parse("test")
-        }
-        setTimeout(function() { document.querySelector('#textbox').value = '' }, 1);
-      }
-      if (keycode === 90 && event.ctrlKey) {
-        parser.parse("undo")
-      }
-    }
-  })
   if (settings.panes !== 'none') io.textColour = document.querySelector(".side-panes").style.color
-  /*if (settings.soundFiles) {
-    const main = document.querySelector('#main')
-    for (let el of settings.soundFiles) {
-      main.innerHTML += '<audio id="' + el + '" src="' + settings.soundsFolder + el + settings.soundsFileExt + '"/>'
-    }
-  }*/
+
   settings.performanceLog('UI built')
   endTurnUI(true)
   settings.performanceLog('endTurnUI completed')
@@ -1467,8 +1460,7 @@ io.init = function() {
     setTimeout(function() {
       if (settings.startingDialogInit) settings.startingDialogInit()
     }, 10)
-  }
-  else {
+  } else {
     if (settings.startingDialogAlt) settings.startingDialogAlt()
     settings.delayStart = false
     world.begin()

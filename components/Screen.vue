@@ -5,6 +5,7 @@ import PaneCompass from './PaneCompass.vue';
 import PaneStatus from './PaneStatus.vue';
 import PaneInventory from './PaneInventory.vue';
 import PaneEnd from './PaneEnd.vue';
+import TextInput from './TextInput.vue';
 const paneList = {
     PaneCompass,
     PaneStatus,
@@ -47,12 +48,7 @@ onMounted(() => {
     <div id="main">
         <div id="inner">
             <div id="output"></div>
-            <!--suppress JSUnresolvedVariable -->
-            <div id="input" v-if="questjs.settings.textInput">
-                <!--suppress JSUnresolvedVariable -->
-                <span id="cursor">{{ questjs.settings.cursor }}</span>
-                <input type="text" name="textbox" id="textbox" autocomplete="off"/>
-            </div>
+            <TextInput v-if="questjs.settings.textInput" :questjs="questjs"/>
         </div>
     </div>
 
@@ -77,6 +73,6 @@ onMounted(() => {
     <div id="quest-map"></div>
     <div id="quest-image"></div>
     <form style="display:none" id="fileDialogForm">
-        <input type="file" id="fileDialog" accept=".q6save"/>
+        <input type="file" id="fileDialog" v-on:change="questjs.saveLoad.loadGameAsFile" accept=".q6save"/>
     </form>
 </template>
