@@ -1639,8 +1639,8 @@ export const TRANSIT = function(exitDir) {
       },
 
       isTransitHere: function (char = player()) {
-          log(this[this.transitDoorDir].name)
-          log(char.loc)
+          console.log(this[this.transitDoorDir].name)
+          console.log(char.loc)
           return this[this.transitDoorDir].name === char.loc
       },
 

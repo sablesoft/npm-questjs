@@ -185,7 +185,7 @@ export class Cmd {
       else {
         if (!cmdParams.scope) {
           console.warn("No scope found in command. This may be because the scope specified does not exist; check the spelling. The command in question is:")
-          log(this)
+          console.log(this)
           parser.msg("ERROR: No scope")
           return null
         }
@@ -522,7 +522,7 @@ export function findCmd(name) {
 export function testCmd(name, s) {
   const cmd = findCmd(name)
   cmd.matchItems(s)
-  log(cmd.tmp)
+  console.log(cmd.tmp)
   metamsg("See results in console (F12)")
 }
 
@@ -610,8 +610,8 @@ cmdRules.isHereAlready = function(cmd, options) {
 cmdRules.isPresentOrContained = function(cmd, options) {
   // use parser functions here as we do not want messages at this point
 
-  if (!options.item.isAtLoc) log(options.item.name)
-  if (!options.char) log(cmd.name)
+  if (!options.item.isAtLoc) console.log(options.item.name)
+  if (!options.char) console.log(cmd.name)
 
   if (options.item.isAtLoc(options.char.name, world.PARSER)) return true;
   if (parser.isHere(options.item)) return true;

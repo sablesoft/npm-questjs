@@ -264,7 +264,7 @@ export const saveLoad = {
       } catch (error) {
         // Add the name of the attribute to the error message
         //console.trace()
-        log(value)
+        console.log(value)
         throw "Error encountered with attribute \"" + key + "\": " + error + ". More here: https://github.com/ThePix/QuestJS/wiki/Save-Load#save-errors"
       }
     }
@@ -363,7 +363,7 @@ export const saveLoad = {
       if (!key.startsWith('QJS:')) continue
       const arr1 = key.split(':')
       const arr2 = localStorage[key].split('!')
-      log(arr2.slice(1, 4))
+      console.log(arr2.slice(1, 4))
       s += "<tr>"
       s += "<td>" + arr1[2] + "</td>"
       s += "<td>" + arr1[1] + "</td>"

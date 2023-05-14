@@ -9,18 +9,8 @@
 //@UNDOC
 
 import {
-    array,
-    io,
-    lang,
-    world,
-    w,
-    debugmsg,
-    parsermsg,
-    printError,
-    processText,
-    player,
-    loc,
-    settings, commands
+    array, io, lang, world, w, settings, commands,
+    debugmsg, parsermsg, printError, processText, player, loc,
 } from "../index.js";
 
 export const parser = {};
@@ -147,7 +137,10 @@ parser.execute = function() {
     }
     settings.performanceLog('About to run command script')
     const outcome = parser.currentCommand.script(parser.currentCommand.tmp.objects)
-    if (outcome === undefined && settings.playMode === 'dev') log("WARNING: " + parser.currentCommand.name + " command did not return a result to indicate success or failure.")
+    if (outcome === undefined && settings.playMode === 'dev') {
+        console.log("WARNING: " + parser.currentCommand.name +
+            " command did not return a result to indicate success or failure.")
+    }
     inEndTurnFlag = true
     settings.performanceLog('About to run world.endTurn')
     world.endTurn(outcome)
@@ -209,7 +202,9 @@ parser.findCommand = function(inputText) {
 
   if (!bestMatch) {
     io.reset()  // just in case something has gone wrong, call this to reset the interface
-    if (settings.playMode === 'dev') log("Command was [" + inputText + "]")
+    if (settings.playMode === 'dev') {
+        console.log("Command was [" + inputText + "]")
+    }
     return lang.not_known_msg;
   }
 

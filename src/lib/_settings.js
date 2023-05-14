@@ -70,9 +70,8 @@ export const settings = {
     return item.isAtLoc(player().name, world.SIDE_PANE) && world.ifNotDark(item) && item.getWorn();
   },
 
-
   // Other UI settings
-  textInput:true,         // Allow the player to type commands
+  textInput : true,         // Allow the player to type commands
   cursor:">",             // The cursor, obviously
   cmdEcho:true,           // Commands are printed to the screen
   textEffectDelay:25,

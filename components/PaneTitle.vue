@@ -19,7 +19,7 @@ let id = function() {
     return props.questjs.verbify(props.title) + '-side-pane-heading';
 }
 let collapsible = function() {
-    return props.questjs.settings.collapsibleSidePanes;
+    return !!props.questjs.settings.collapsibleSidePanes;
 }
 let switchPane = function() {
     // todo
@@ -32,6 +32,6 @@ let switchPane = function() {
     <h4 v-if="title" class="side-pane-heading" :id="id()">
         {{ title }}
         <i v-if="collapsible()" class="fas fa-eye"
-           v-on:click="switchPane()"></i>
+           @click="switchPane()"></i>
     </h4>
 </template>

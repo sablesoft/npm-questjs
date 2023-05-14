@@ -40,7 +40,9 @@ test.start = function(title, filename = test.saveFilename) {
 test.title = function(title) {
   test.subCount = 0
   test.currentTitle = title
-  if (test.printTitles) log(title)
+  if (test.printTitles) {
+      console.log(title)
+  }
 }
 
 test.printTitle = function() {

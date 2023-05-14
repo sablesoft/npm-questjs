@@ -199,7 +199,7 @@ export const DEFAULT_OBJECT = {
     // If there is a condition and it is not met, stop
     //console.log("this=" + this.name);
     if (this.eventCondition && !this.eventCondition(turn)) return;
-    if (typeof this.eventScript !== 'function') log("About to call eventScrip on the object '" + this.name + "', but it will throw an exception because there is no such function!")
+    if (typeof this.eventScript !== 'function') console.log("About to call eventScrip on the object '" + this.name + "', but it will throw an exception because there is no such function!")
     this.eventScript(turn);
     if (typeof this.eventPeriod === "number") {
       this.eventCountdown = this.eventPeriod;

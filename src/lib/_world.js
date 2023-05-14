@@ -276,7 +276,9 @@ export const world = {
           const reverseDir = ex.reverse()
           const dest = w[ex.name]
           if (dest[reverseDir]) {
-            log('WARNING: The returning Exit for the Link on ' + item.name + ' goes to a direction that already has something set (conflicts with "' + reverseDir + '" on ' + dest.name + ').')
+              console.log('WARNING: The returning Exit for the Link on ' + item.name +
+                  ' goes to a direction that already has something set (conflicts with "' +
+                  reverseDir + '" on ' + dest.name + ').')
             continue
           }
           dest[reverseDir] = new Exit(ex.origin.name)
@@ -334,9 +336,9 @@ export const world = {
             }
           }
           catch(err) {
-            warningFor(item, "The 'desc' function caused an error")
-            log(err.message)
-            log(err.stack)
+              warningFor(item, "The 'desc' function caused an error")
+              console.log(err.message)
+              console.log(err.stack)
           }
         } else if (typeof item.desc !== 'string') {
           warningFor(item, "The 'desc' attribute for this location is neither a string nor a function")
@@ -359,9 +361,9 @@ export const world = {
             }
           }
           catch(err) {
-            warningFor(item, "The 'examine' function caused an error")
-            log(err.message)
-            log(err.stack)
+              warningFor(item, "The 'examine' function caused an error")
+              console.log(err.message)
+              console.log(err.stack)
           }
         }
         else if (typeof item.examine !== 'string') {
@@ -394,8 +396,12 @@ export const world = {
 
   // Call after the player takes a turn, sending it a result, SUCCESS, SUCCESS_NO_TURNSCRIPTS or FAILED
   endTurn:function(result) {
-    if (result === true) log("That command returned 'true', rather than the proper result code.");
-    if (result === false) log("That command returned 'false', rather than the proper result code.");
+    if (result === true) {
+        console.log("That command returned 'true', rather than the proper result code.");
+    }
+    if (result === false) {
+        console.log("That command returned 'false', rather than the proper result code.");
+    }
     util.handleChangeListeners()
     if (result === world.SUCCESS || (settings.failCountsAsTurn && result === world.FAILED)) {
       game.turnCount++
@@ -463,7 +469,9 @@ export const world = {
 
     let light = world.LIGHT_NONE
     for (const item of world.scope) {
-      if (!item.lightSource) log(item.name)
+      if (!item.lightSource) {
+          console.log(item.name)
+      }
       if (light < item.lightSource()) {
         light = item.lightSource()
       }

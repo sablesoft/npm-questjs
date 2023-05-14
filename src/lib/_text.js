@@ -655,7 +655,7 @@ tp.text_processors.hereDesc = function(arr, params) {
   else if (typeof loc()[attName] === 'function') {
     s = loc()[attName]()
     if (s === undefined) {
-      log("This location description is not set up properly. It has a '" + attName +
+      console.log("This location description is not set up properly. It has a '" + attName +
           "' function that does not return a string. The location is \"" + loc().name + "\".")
       return "[Bad description, F12 for details]"
     }

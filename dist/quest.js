@@ -8,12 +8,12 @@ test.testing = false;
 const log$1 = console.log;
 const debuglog = (s) => {
   if (settings.playMode === "dev" || settings.playMode === "beta") {
-    log$1(s);
+    console.log(s);
   }
 };
 const parserlog = (s) => {
   if (parser.debug) {
-    log$1(s);
+    console.log(s);
   }
 };
 function runCmd(cmd) {
@@ -190,10 +190,10 @@ random.diceRoll = function(s, average) {
     let total = 0;
     const ary = s.split(":");
     for (const s2 of ary) {
-      log$1(total);
+      console.log(total);
       total += parseInt(s2);
     }
-    log$1(total);
+    console.log(total);
     return total / ary.length;
   }
   const n = /^\d+$/.test(s) ? random.int(1, parseInt(s)) : parseInt(random.fromArray(s.split(":")));
@@ -235,7 +235,7 @@ function prefix(item2, options) {
   return sentenceCase(item2.alias) + ": ";
 }
 function warningFor(o, msg2) {
-  log$1("Warning for " + o.name + ": " + msg2);
+  console.log("Warning for " + o.name + ": " + msg2);
 }
 function formatList(itemArray, options) {
   if (options === void 0) {
@@ -678,8 +678,9 @@ util.setChangeListenersLoadString = function(s) {
   }
 };
 function respond(params, list2) {
-  if (settings.responseDebug)
-    log$1(params);
+  if (settings.responseDebug) {
+    console.log(params);
+  }
   if (!params.char)
     errormsg('A call to "respond" does not have "char" set in the params.');
   const response = util.findResponse(params, list2, params.extraTest);
@@ -688,8 +689,8 @@ function respond(params, list2) {
       params.afterScript(params);
     if (!params.noResponseNotError) {
       errormsg("Failed to find a response. ASK/TELL or some other system using the respond function was given a list of options that did not have a default. Below the stack trace, you should see the parameters sent and the list of responses. The last response should have no test function (or a test function that always returns true).");
-      log$1(params);
-      log$1(list2);
+      console.log(params);
+      console.log(list2);
     }
     return false;
   }
@@ -1290,27 +1291,30 @@ util.commandsToTest = [
   }
 ];
 util.testme = function(item2) {
-  log$1("-------------------------------------");
-  log$1("Testing implementation of odd commands, using " + item2.name);
+  console.log("-------------------------------------");
+  console.log("Testing implementation of odd commands, using " + item2.name);
   test.testing = true;
   for (const d of util.commandsToTest) {
     if (d.onOwn) {
       test.testOutput = [];
       parser.parse(d.name);
-      if (test.testOutput[0] === lang.not_known_msg)
-        log$1("No command to handle " + d.name.toUpperCase());
+      if (test.testOutput[0] === lang.not_known_msg) {
+        console.log("No command to handle " + d.name.toUpperCase());
+      }
     }
     if (d.withText) {
       test.testOutput = [];
       parser.parse(d.name + " some text");
-      if (test.testOutput[0] === lang.not_known_msg)
-        log$1("No command to handle " + d.name.toUpperCase() + " <text>");
+      if (test.testOutput[0] === lang.not_known_msg) {
+        console.log("No command to handle " + d.name.toUpperCase() + " <text>");
+      }
     }
     if (d.withItem) {
       test.testOutput = [];
       parser.parse(d.name + " " + item2.alias);
-      if (test.testOutput[0] === lang.not_known_msg)
-        log$1("No command to handle " + d.name.toUpperCase() + " <item>");
+      if (test.testOutput[0] === lang.not_known_msg) {
+        console.log("No command to handle " + d.name.toUpperCase() + " <item>");
+      }
     }
   }
   test.testing = false;
@@ -3160,7 +3164,7 @@ const saveLoad = {
           return key + ":numberarray:" + saveLoad.encodeNumberArray(value) + ";";
         return "";
       } catch (error) {
-        log(value);
+        console.log(value);
         throw 'Error encountered with attribute "' + key + '": ' + error + ". More here: https://github.com/ThePix/QuestJS/wiki/Save-Load#save-errors";
       }
     }
@@ -3242,7 +3246,7 @@ const saveLoad = {
         continue;
       const arr1 = key.split(":");
       const arr2 = localStorage[key].split("!");
-      log(arr2.slice(1, 4));
+      console.log(arr2.slice(1, 4));
       s += "<tr>";
       s += "<td>" + arr1[2] + "</td>";
       s += "<td>" + arr1[1] + "</td>";
@@ -4064,7 +4068,7 @@ tp.text_processors.hereDesc = function(arr, params) {
   } else if (typeof loc$1()[attName] === "function") {
     s = loc$1()[attName]();
     if (s === void 0) {
-      log("This location description is not set up properly. It has a '" + attName + `' function that does not return a string. The location is "` + loc$1().name + '".');
+      console.log("This location description is not set up properly. It has a '" + attName + `' function that does not return a string. The location is "` + loc$1().name + '".');
       return "[Bad description, F12 for details]";
     }
   } else {
@@ -4315,7 +4319,7 @@ function msg(s, params, cssClass) {
     console.error('Trying to print with "msg", but got this instead of a string:');
     console.error(s);
     const err = new Error();
-    log(err.stack);
+    console.log(err.stack);
     throw "Bad string for msg()";
   }
   if (/^#/.test(s) && !cssClass) {
@@ -4834,7 +4838,7 @@ io.outputFromQueue = function() {
     io.print(data);
   }
   if (data.action === "delay" && (!settings.disableWaitInDevMode || settings.playMode !== "dev")) {
-    log("here");
+    console.log("here");
     io.disable();
     io.outputSuspended = true;
     if (data.text) {
@@ -5240,8 +5244,8 @@ io.appendItem = function(item2, htmlDiv, loc2, isSubItem, highlight) {
   el.innerHTML += io.getItemHtml(item2, loc2, isSubItem, highlight);
   if (item2.container && !item2.closed) {
     if (typeof item2.getContents !== "function") {
-      log("WARNING: item flagged as container but no getContents function:");
-      log(item2);
+      console.log("WARNING: item flagged as container but no getContents function:");
+      console.log(item2);
     }
     const l = item2.getContents(world.SIDE_PANE);
     for (let el2 of l) {
@@ -5269,9 +5273,6 @@ io.getItemHtml = function(item2, loc2, isSubItem, highlight) {
     s += "</div>";
   }
   return s;
-};
-io.createPanes = function() {
-  io.panesWidth = document.querySelector(".side-panes").clientWidth;
 };
 io.getSidePaneHeadingHTML = function(title) {
   if (!title)
@@ -5308,110 +5309,109 @@ io.msgInputText = function(s) {
 };
 io.savedCommands = ["help"];
 io.savedCommandsPos = 0;
+function keyboardHandler(event) {
+  console.debug("KeyboardEvent", event);
+  if (io.keydownFunctions.length) {
+    const fn = io.keydownFunctions.pop();
+    return fn(event);
+  }
+  const keycode = event.keyCode ? event.keyCode : event.which;
+  if (keycode === 13) {
+    if (event.ctrlKey && (settings.playMode === "dev" || settings.playMode === "beta")) {
+      parser.parse("script show");
+    } else {
+      const s = document.querySelector("#textbox").value;
+      io.msgInputText(s);
+      if (s) {
+        if (io.savedCommands[io.savedCommands.length - 1] !== io.inputValue && !io.doNotSaveInput) {
+          io.savedCommands.push(s);
+        }
+        io.savedCommandsPos = io.savedCommands.length;
+        parser.parse(s);
+        if (io.doNotEraseLastCommand) {
+          io.doNotEraseLastCommand = false;
+        } else {
+          document.querySelector("#textbox").value = "";
+        }
+      }
+    }
+  }
+  if (keycode === 38) {
+    io.savedCommandsPos -= 1;
+    if (io.savedCommandsPos < 0) {
+      io.savedCommandsPos = 0;
+    }
+    document.querySelector("#textbox").value = io.savedCommands[io.savedCommandsPos];
+    const el = document.querySelector("#textbox");
+    if (el.setSelectionRange) {
+      setTimeout(function() {
+        el.setSelectionRange(9999, 9999);
+      }, 0);
+    } else if (typeof el.selectionStart == "number") {
+      el.selectionStart = el.selectionEnd = el.value.length;
+    } else if (typeof el.createTextRange != "undefined") {
+      el.focus();
+      let range = el.createTextRange();
+      range.collapse(false);
+      range.select();
+    }
+  }
+  if (keycode === 40) {
+    io.savedCommandsPos += 1;
+    if (io.savedCommandsPos >= io.savedCommands.length) {
+      io.savedCommandsPos = io.savedCommands.length - 1;
+    }
+    document.querySelector("#textbox").value = io.savedCommands[io.savedCommandsPos];
+  }
+  if (keycode === 27) {
+    document.querySelector("#textbox").value = null;
+  }
+  if (!io.disableLevel) {
+    if (settings.customKeyResponses) {
+      if (settings.customKeyResponses(keycode, event))
+        return false;
+    }
+    for (let exit of lang.exit_list) {
+      if (exit.key && exit.key === keycode) {
+        io.msgInputText(exit.name);
+        parser.parse(exit.name);
+        document.querySelector("#textbox").value = "";
+        event.stopPropagation();
+        event.preventDefault();
+        return false;
+      }
+    }
+    if (keycode === 123 && settings.playMode === "play")
+      return false;
+    if (event.ctrlKey && event.shiftKey && keycode === 73 && settings.playMode === "play")
+      return false;
+    if (event.ctrlKey && event.shiftKey && keycode === 74 && settings.playMode === "play")
+      return false;
+    if (keycode === 96 && (settings.playMode === "dev" || settings.playMode === "beta")) {
+      if (event.ctrlKey && event.altKey) {
+        parser.parse("wt b");
+      } else if (event.altKey) {
+        parser.parse("wt a");
+      } else if (event.ctrlKey) {
+        parser.parse("wt c");
+      } else {
+        parser.parse("test");
+      }
+      setTimeout(function() {
+        document.querySelector("#textbox").value = "";
+      }, 1);
+    }
+    if (keycode === 90 && event.ctrlKey) {
+      parser.parse("undo");
+    }
+  }
+}
 io.init = function() {
   settings.performanceLog("Start io.onload");
   if (settings.playMode === "play")
     window.oncontextmenu = function() {
       return false;
     };
-  document.querySelector("#fileDialog").onchange = saveLoad.loadGameAsFile;
-  document.addEventListener("keydown", function(event) {
-    if (io.keydownFunctions.length) {
-      const fn = io.keydownFunctions.pop();
-      fn(event);
-      return;
-    }
-    const keycode = event.keyCode ? event.keyCode : event.which;
-    if (keycode === 13) {
-      if (event.ctrlKey && (settings.playMode === "dev" || settings.playMode === "beta")) {
-        parser.parse("script show");
-      } else {
-        const s = document.querySelector("#textbox").value;
-        io.msgInputText(s);
-        if (s) {
-          if (io.savedCommands[io.savedCommands.length - 1] !== s && !io.doNotSaveInput) {
-            io.savedCommands.push(s);
-          }
-          io.savedCommandsPos = io.savedCommands.length;
-          parser.parse(s);
-          if (io.doNotEraseLastCommand) {
-            io.doNotEraseLastCommand = false;
-          } else {
-            document.querySelector("#textbox").value = "";
-          }
-        }
-      }
-    }
-    if (keycode === 38) {
-      io.savedCommandsPos -= 1;
-      if (io.savedCommandsPos < 0) {
-        io.savedCommandsPos = 0;
-      }
-      document.querySelector("#textbox").value = io.savedCommands[io.savedCommandsPos];
-      const el = document.querySelector("#textbox");
-      if (el.setSelectionRange) {
-        setTimeout(function() {
-          el.setSelectionRange(9999, 9999);
-        }, 0);
-      } else if (typeof el.selectionStart == "number") {
-        el.selectionStart = el.selectionEnd = el.value.length;
-      } else if (typeof el.createTextRange != "undefined") {
-        el.focus();
-        let range = el.createTextRange();
-        range.collapse(false);
-        range.select();
-      }
-    }
-    if (keycode === 40) {
-      io.savedCommandsPos += 1;
-      if (io.savedCommandsPos >= io.savedCommands.length) {
-        io.savedCommandsPos = io.savedCommands.length - 1;
-      }
-      document.querySelector("#textbox").value = io.savedCommands[io.savedCommandsPos];
-    }
-    if (keycode === 27) {
-      document.querySelector("#textbox").value = "";
-    }
-    if (!io.disableLevel) {
-      if (settings.customKeyResponses) {
-        if (settings.customKeyResponses(keycode, event))
-          return false;
-      }
-      for (let exit of lang.exit_list) {
-        if (exit.key && exit.key === keycode) {
-          io.msgInputText(exit.name);
-          parser.parse(exit.name);
-          document.querySelector("#textbox").value = "";
-          event.stopPropagation();
-          event.preventDefault();
-          return false;
-        }
-      }
-      if (keycode === 123 && settings.playMode === "play")
-        return false;
-      if (event.ctrlKey && event.shiftKey && keycode === 73 && settings.playMode === "play")
-        return false;
-      if (event.ctrlKey && event.shiftKey && keycode === 74 && settings.playMode === "play")
-        return false;
-      if (keycode === 96 && (settings.playMode === "dev" || settings.playMode === "beta")) {
-        if (event.ctrlKey && event.altKey) {
-          parser.parse("wt b");
-        } else if (event.altKey) {
-          parser.parse("wt a");
-        } else if (event.ctrlKey) {
-          parser.parse("wt c");
-        } else {
-          parser.parse("test");
-        }
-        setTimeout(function() {
-          document.querySelector("#textbox").value = "";
-        }, 1);
-      }
-      if (keycode === 90 && event.ctrlKey) {
-        parser.parse("undo");
-      }
-    }
-  });
   if (settings.panes !== "none")
     io.textColour = document.querySelector(".side-panes").style.color;
   settings.performanceLog("UI built");
@@ -5871,7 +5871,7 @@ class Cmd {
       } else {
         if (!cmdParams.scope) {
           console.warn("No scope found in command. This may be because the scope specified does not exist; check the spelling. The command in question is:");
-          log(this);
+          console.log(this);
           parser.msg("ERROR: No scope");
           return null;
         }
@@ -6180,7 +6180,7 @@ function findCmd(name2) {
 function testCmd(name2, s) {
   const cmd = findCmd(name2);
   cmd.matchItems(s);
-  log(cmd.tmp);
+  console.log(cmd.tmp);
   metamsg("See results in console (F12)");
 }
 const cmdRules = {};
@@ -6252,9 +6252,9 @@ cmdRules.isHereAlready = function(cmd, options) {
 };
 cmdRules.isPresentOrContained = function(cmd, options) {
   if (!options.item.isAtLoc)
-    log(options.item.name);
+    console.log(options.item.name);
   if (!options.char)
-    log(cmd.name);
+    console.log(cmd.name);
   if (options.item.isAtLoc(options.char.name, world.PARSER))
     return true;
   if (parser.isHere(options.item))
@@ -6462,7 +6462,7 @@ const DEFAULT_OBJECT = {
     if (this.eventCondition && !this.eventCondition(turn))
       return;
     if (typeof this.eventScript !== "function")
-      log("About to call eventScrip on the object '" + this.name + "', but it will throw an exception because there is no such function!");
+      console.log("About to call eventScrip on the object '" + this.name + "', but it will throw an exception because there is no such function!");
     this.eventScript(turn);
     if (typeof this.eventPeriod === "number") {
       this.eventCountdown = this.eventPeriod;
@@ -11847,8 +11847,8 @@ const TRANSIT = function(exitDir) {
         this.afterLoad();
     },
     isTransitHere: function(char2 = player()) {
-      log(this[this.transitDoorDir].name);
-      log(char2.loc);
+      console.log(this[this.transitDoorDir].name);
+      console.log(char2.loc);
       return this[this.transitDoorDir].name === char2.loc;
     },
     transitOfferMenu: function() {
@@ -12277,7 +12277,7 @@ const world = {
           const reverseDir = ex.reverse();
           const dest = w$1[ex.name];
           if (dest[reverseDir]) {
-            log("WARNING: The returning Exit for the Link on " + item2.name + ' goes to a direction that already has something set (conflicts with "' + reverseDir + '" on ' + dest.name + ").");
+            console.log("WARNING: The returning Exit for the Link on " + item2.name + ' goes to a direction that already has something set (conflicts with "' + reverseDir + '" on ' + dest.name + ").");
             continue;
           }
           dest[reverseDir] = new Exit(ex.origin.name);
@@ -12330,8 +12330,8 @@ const world = {
             }
           } catch (err) {
             warningFor(item2, "The 'desc' function caused an error");
-            log(err.message);
-            log(err.stack);
+            console.log(err.message);
+            console.log(err.stack);
           }
         } else if (typeof item2.desc !== "string") {
           warningFor(item2, "The 'desc' attribute for this location is neither a string nor a function");
@@ -12355,8 +12355,8 @@ const world = {
             }
           } catch (err) {
             warningFor(item2, "The 'examine' function caused an error");
-            log(err.message);
-            log(err.stack);
+            console.log(err.message);
+            console.log(err.stack);
           }
         } else if (typeof item2.examine !== "string") {
           warningFor(item2, "The 'examine' attribute for this item is neither a string nor a function");
@@ -12386,10 +12386,12 @@ const world = {
   // Turn taking
   // Call after the player takes a turn, sending it a result, SUCCESS, SUCCESS_NO_TURNSCRIPTS or FAILED
   endTurn: function(result2) {
-    if (result2 === true)
-      log("That command returned 'true', rather than the proper result code.");
-    if (result2 === false)
-      log("That command returned 'false', rather than the proper result code.");
+    if (result2 === true) {
+      console.log("That command returned 'true', rather than the proper result code.");
+    }
+    if (result2 === false) {
+      console.log("That command returned 'false', rather than the proper result code.");
+    }
     util.handleChangeListeners();
     if (result2 === world.SUCCESS || settings.failCountsAsTurn && result2 === world.FAILED) {
       game.turnCount++;
@@ -12450,8 +12452,9 @@ const world = {
       world.scope.push(w$1[player().onPhoneTo]);
     let light = world.LIGHT_NONE;
     for (const item2 of world.scope) {
-      if (!item2.lightSource)
-        log(item2.name);
+      if (!item2.lightSource) {
+        console.log(item2.name);
+      }
       if (light < item2.lightSource()) {
         light = item2.lightSource();
       }
@@ -13498,7 +13501,7 @@ const TOPIC = function(fromStart) {
     },
     showHideList: function(list2, isShow) {
       if (typeof list2 === "string") {
-        log("WARNING: " + (isShow ? "nowShow" : "nowHide") + " for topic " + this.name + " is a string.");
+        console.log("WARNING: " + (isShow ? "nowShow" : "nowHide") + " for topic " + this.name + " is a string.");
         return;
       }
       for (let s of list2) {
@@ -13506,7 +13509,7 @@ const TOPIC = function(fromStart) {
         if (t) {
           t[isShow ? "showTopic" : "hideTopic"] = true;
         } else {
-          log("WARNING: Topic " + this.name + " wants to now show/hide a non-existent topic, " + s);
+          console.log("WARNING: Topic " + this.name + " wants to now show/hide a non-existent topic, " + s);
         }
       }
     },
@@ -13615,8 +13618,9 @@ parser.execute = function() {
     }
     settings.performanceLog("About to run command script");
     const outcome = parser.currentCommand.script(parser.currentCommand.tmp.objects);
-    if (outcome === void 0 && settings.playMode === "dev")
-      log("WARNING: " + parser.currentCommand.name + " command did not return a result to indicate success or failure.");
+    if (outcome === void 0 && settings.playMode === "dev") {
+      console.log("WARNING: " + parser.currentCommand.name + " command did not return a result to indicate success or failure.");
+    }
     inEndTurnFlag = true;
     settings.performanceLog("About to run world.endTurn");
     world.endTurn(outcome);
@@ -13648,8 +13652,9 @@ parser.findCommand = function(inputText) {
   settings.performanceLog("Best match found");
   if (!bestMatch) {
     io.reset();
-    if (settings.playMode === "dev")
-      log("Command was [" + inputText + "]");
+    if (settings.playMode === "dev") {
+      console.log("Command was [" + inputText + "]");
+    }
     return lang.not_known_msg;
   }
   bestMatch.tmp.string = inputText;
@@ -14775,7 +14780,7 @@ new Cmd("Sit", {
   objects: [],
   script: function() {
     const objs = scopeBy((el) => el.siton && el.isAtLoc(player().loc));
-    log(objs);
+    console.log(objs);
     if (objs.length === 0)
       return failedmsg(lang.no_sit_object);
     return objs[0].siton({ char: player(), item: objs[0] }) ? world.SUCCESS : world.FAILED;
@@ -14789,7 +14794,7 @@ new Cmd("Recline", {
   objects: [],
   script: function() {
     const objs = scopeBy((el) => el.reclineon && el.isAtLoc(player().loc));
-    log(objs);
+    console.log(objs);
     if (objs.length === 0)
       return failedmsg(lang.no_recline_object);
     return objs[0].reclineon({ char: player(), item: objs[0] }) ? world.SUCCESS : world.FAILED;
@@ -15977,7 +15982,7 @@ function handleGiveToNpc(char2, objects) {
   if (!npc2.npc && npc2 !== player())
     return failedmsg(lang.not_npc_for_give, { char: char2, item: npc2 });
   if (!npc2.handleGiveTo)
-    log(npc2);
+    console.log(npc2);
   for (const obj of objects[0]) {
     const flag = npc2.handleGiveTo({ char: char2, npc: npc2, multiple, item: obj, toLoc: npc2.name, fromLoc: char2.name });
     success = success || flag;
@@ -16149,6 +16154,7 @@ export {
   image,
   initCommands,
   io,
+  keyboardHandler,
   lang,
   listProperties,
   loc$1 as loc,

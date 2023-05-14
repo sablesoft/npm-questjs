@@ -5,7 +5,9 @@ import {createRoom, loc, player, settings, w} from "../index.js";
 function createHex(x, y, data) {
   const name = map.coordToCellName(x, y)
   if (w[name]) {
-    if (settings.mapReportRepeats) log('Already got a ' + name)
+    if (settings.mapReportRepeats) {
+        console.log('Already got a ' + name)
+    }
     return null
   }
   const o = createRoom(name, data)
@@ -18,8 +20,8 @@ function createHex(x, y, data) {
     if (!map.vectors[dir]) return null
     const x = this.mapX + map.vectors[dir][0]
     const y = this.mapY + map.vectors[dir][1]
-    log(map.vectors[dir])
-    log(map.coordToCellName(x, y))
+      console.log(map.vectors[dir])
+      console.log(map.coordToCellName(x, y))
     return new Exit(map.coordToCellName(x, y), {origin:this, dir:dir})
   }
 
@@ -51,7 +53,7 @@ function createHex(x, y, data) {
 function createBiome(x, y, biomeChar, data = {}) {
   if (biomeChar === ' ') return null
   if (!settings.mapBiomes[biomeChar]) {
-    log("No biome for " + biomeChar)
+      console.log("No biome for " + biomeChar)
     return null
   }
   const o = createHex(x, y, data)
@@ -192,7 +194,7 @@ map.update = function() {
   if (settings.mapExtras) result.push(...settings.mapExtras())
   // Add the player position marker
   result.push(settings.mapMarker ? settings.mapMarker(w[player().loc]) : map.marker())
-  log(result)
+    console.log(result)
 
   // The image will be draweing using these coordinates (in pixels)
   const x = -settings.mapWidth / 2 - mapXOffset * map.xFactor
@@ -324,10 +326,10 @@ map.river = function(x, y, ...data) {
 map.border = function(x, y, colour, ...data) {
   const hex = w[map.coordToCellName(x, y)]
   if (!hex) {
-    log('Failed to add river to ' + map.coordToCellName(x, y))
+      console.log('Failed to add river to ' + map.coordToCellName(x, y))
     return
   }
-  log(hex.name)
+    console.log(hex.name)
   for (const index in data) {
     if (!data[index]) continue
     hex['hexBorderWidth' + index] = data[index]
@@ -338,7 +340,7 @@ map.border = function(x, y, colour, ...data) {
       'stroke-linecap':"round",
     } }
   }
-  log(hex)
+    console.log(hex)
 }
 
 

@@ -37,8 +37,8 @@ test.testing = false;
 
 // If we try to do anything fancy with log we get this line number not the calling line
 export const log = console.log
-export const debuglog = (s) => { if(settings.playMode === 'dev' || settings.playMode === 'beta'){ log(s)} }
-export const parserlog = (s) => { if(parser.debug){ log(s)} }
+export const debuglog = (s) => { if (settings.playMode === 'dev' || settings.playMode === 'beta') { console.log(s) } }
+export const parserlog = (s) => { if (parser.debug) { console.log(s) } }
 
 
 //@DOC
@@ -279,10 +279,10 @@ random.diceRoll = function(s, average) {
     let total = 0
     const ary = s.split(':')
     for (const s2 of ary) {
-      log(total)
+      console.log(total)
       total += parseInt(s2)
     }
-      log(total)
+    console.log(total)
     return total / ary.length
   }
 
@@ -364,7 +364,7 @@ export function prefix(item, options) {
   return sentenceCase(item.alias) + ": ";
 }
 
-export function warningFor(o, msg) { log('Warning for ' + o.name + ': ' + msg) }
+export function warningFor(o, msg) { console.log('Warning for ' + o.name + ': ' + msg) }
 
 //@DOC
 // Creates a string from an array. If the array element is a string, that is used, if it is an item, `lang.getName` is used (and passed the `options`). Items are sorted alphabetically, based on the "name" attribute.
@@ -962,15 +962,17 @@ util.setChangeListenersLoadString = function(s) {
 // Searches the given list for a suitable response, according to the given params, and runs that response.
 // This is a big topic, see [here](https://github.com/ThePix/QuestJS/wiki/The-respond-function) for more.
 export function respond(params, list) {
-  if (settings.responseDebug) log(params)
+  if (settings.responseDebug) {
+      console.log(params)
+  }
   if (!params.char) errormsg("A call to \"respond\" does not have \"char\" set in the params.")
   const response = util.findResponse(params, list, params.extraTest)
   if (!response) {
     if (params.afterScript) params.afterScript(params)
     if (!params.noResponseNotError) {
       errormsg("Failed to find a response. ASK/TELL or some other system using the respond function was given a list of options that did not have a default. Below the stack trace, you should see the parameters sent and the list of responses. The last response should have no test function (or a test function that always returns true).")
-      log(params)
-      log(list)
+      console.log(params)
+      console.log(list)
     }
     return false
   }
@@ -1614,24 +1616,30 @@ util.commandsToTest = [
 ]
 
 util.testme = function(item) {
-  log('-------------------------------------')
-  log('Testing implementation of odd commands, using ' + item.name)
+    console.log('-------------------------------------')
+    console.log('Testing implementation of odd commands, using ' + item.name)
   test.testing = true
   for (const d of util.commandsToTest) {
     if (d.onOwn) {
       test.testOutput = []
       parser.parse(d.name)
-      if (test.testOutput[0] === lang.not_known_msg) log('No command to handle ' + d.name.toUpperCase())
+      if (test.testOutput[0] === lang.not_known_msg) {
+          console.log('No command to handle ' + d.name.toUpperCase())
+      }
     }
     if (d.withText) {
       test.testOutput = []
       parser.parse(d.name + ' some text')
-      if (test.testOutput[0] === lang.not_known_msg) log('No command to handle ' + d.name.toUpperCase() + ' <text>')
+      if (test.testOutput[0] === lang.not_known_msg) {
+          console.log('No command to handle ' + d.name.toUpperCase() + ' <text>')
+      }
     }
     if (d.withItem) {
       test.testOutput = []
       parser.parse(d.name + ' ' + item.alias)
-      if (test.testOutput[0] === lang.not_known_msg) log('No command to handle ' + d.name.toUpperCase() + ' <item>')
+      if (test.testOutput[0] === lang.not_known_msg) {
+          console.log('No command to handle ' + d.name.toUpperCase() + ' <item>')
+      }
     }
 
 

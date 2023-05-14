@@ -706,12 +706,6 @@ agenda.findPath = function(start, end, maxlength) {
     currentList = nextList;
   }
   return false
-  /*console.error("Path-finding failed: " + (currentList.length === 0 ? 'list is empty' : 'exceeded maximum length'))
-  log("start: " + start.name)
-  log("end: " + end.name)
-  log("maxlength: " + maxlength)
-  console.trace()
-  throw("Path-finding failed, see comments above.")*/
 }
 
 agenda.extractPath = function(start, end) {
@@ -881,7 +875,7 @@ export const TOPIC = function(fromStart) {
       },
       showHideList: function (list, isShow) {
           if (typeof list === "string") {
-              log("WARNING: " + (isShow ? "nowShow" : "nowHide") + " for topic " + this.name + " is a string.")
+              console.log("WARNING: " + (isShow ? "nowShow" : "nowHide") + " for topic " + this.name + " is a string.")
               return
           }
           for (let s of list) {
@@ -889,7 +883,7 @@ export const TOPIC = function(fromStart) {
               if (t) {
                   t[isShow ? 'showTopic' : 'hideTopic'] = true
               } else {
-                  log("WARNING: Topic " + this.name + " wants to now show/hide a non-existent topic, " + s)
+                  console.log("WARNING: Topic " + this.name + " wants to now show/hide a non-existent topic, " + s)
               }
           }
       },

@@ -44,7 +44,7 @@ let icon = function(row, column) {
                     <span :id="'exit-' + exit(row, column).name"
                           v-html="icon(row, column)"
                           class="compass-button"
-                          v-on:click="click(row, column)"
+                          @click="click(row, column)"
                           style="display: none;">
                     </span>
                 </td>
@@ -54,7 +54,7 @@ let icon = function(row, column) {
                     <span :id="'exit-' + exit(row, column).name"
                           v-html="icon(row, column)"
                           class="compass-button"
-                          v-on:click="click(row, column)"
+                          @click="click(row, column)"
                           style="display: none;">
                     </span>
                 </td>

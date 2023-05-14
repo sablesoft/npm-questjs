@@ -824,7 +824,7 @@ export const commands = [];
     objects:[],
     script:function() {
       const objs = scopeBy(el => el.siton && el.isAtLoc(player().loc))
-      log(objs)
+      console.log(objs)
       if (objs.length === 0) return failedmsg(lang.no_sit_object)
       return objs[0].siton({char:player(), item:objs[0]}) ? world.SUCCESS : world.FAILED
     },
@@ -837,7 +837,7 @@ export const commands = [];
     objects:[],
     script:function() {
       const objs = scopeBy(el => el.reclineon && el.isAtLoc(player().loc))
-      log(objs)
+      console.log(objs)
       if (objs.length === 0) return failedmsg(lang.no_recline_object)
       return objs[0].reclineon({char:player(), item:objs[0]}) ? world.SUCCESS : world.FAILED
     },
@@ -2088,7 +2088,7 @@ export function handleGiveToNpc(char, objects) {
   const npc = objects[1][0];
   const multiple = objects[0].length > 1 || parser.currentCommand.all;
   if (!npc.npc && npc !== player()) return failedmsg(lang.not_npc_for_give, {char:char, item:npc})
-  if (!npc.handleGiveTo) log(npc)
+  if (!npc.handleGiveTo) console.log(npc)
 
   for (const obj of objects[0]) {
     const flag = npc.handleGiveTo({char:char, npc:npc, multiple:multiple, item:obj, toLoc:npc.name, fromLoc:char.name})

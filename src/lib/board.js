@@ -106,7 +106,7 @@ board.handleCell = function(x, y) {
     s2 += 'x="' + (x2 - this.settings.cellSize / 2) + '" y="' + (y2 - this.settings.cellSize / 2 - 100) + '" '
     s2 += 'height="' + this.settings.cellSize + '" width="' + this.settings.cellSize + '" />'
     s2 += '</g>'
-    log(s2)
+    console.log(s2)
     s += s2
   }
 

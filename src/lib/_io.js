@@ -105,7 +105,7 @@ export function msg(s, params, cssClass) {
     console.error("Trying to print with \"msg\", but got this instead of a string:")
     console.error(s)
     const err = new Error();
-    log(err.stack)
+    console.log(err.stack)
     throw "Bad string for msg()"
   }
 
@@ -796,7 +796,7 @@ io.outputFromQueue = function() {
     io.print(data)
   }
   if (data.action === 'delay' && (!settings.disableWaitInDevMode || settings.playMode !== 'dev')) {
-    log('here')
+    console.log('here')
     io.disable()
     io.outputSuspended = true
     if (data.text) {
@@ -1272,8 +1272,8 @@ io.appendItem = function(item, htmlDiv, loc, isSubItem, highlight) {
 
   if (item.container && !item.closed) {
     if (typeof item.getContents !== 'function') {
-      log("WARNING: item flagged as container but no getContents function:");
-      log(item);
+      console.log("WARNING: item flagged as container but no getContents function:");
+      console.log(item);
     }
     const l = item.getContents(world.SIDE_PANE);
     for (let el of l) {
