@@ -1358,7 +1358,7 @@ const settings = {
   panesCollapseAt: 700,
   compassPane: true,
   // Set to true to have a compass world.
-  symbolsForCompass: true,
+  useCompassIcons: true,
   statusPane: "Status",
   // Title of the panel; set to false to turn off
   statusWidthLeft: 120,
@@ -2136,7 +2136,7 @@ const lang = {
         metamsg("{b:User Interface:} To interact with an object, click on its name in the side pane, and a set of possible actions will appear under it. Click on the appropriate action.");
       }
       if (settings.compassPane) {
-        if (settings.symbolsForCompass) {
+        if (settings.useCompassIcons) {
           metamsg("You can also use the compass rose at the top to move around. Click the eye symbol, &#128065;, to look at you current location, the clock symbol to wait or &#128712; for help.");
         } else {
           metamsg("You can also use the compass rose at the top to move around. Click 'Lk' to look at you current location, 'Z' to wait or '?' for help.");
@@ -5204,11 +5204,6 @@ io.keydownForMenuFunction = function(e) {
     document.querySelector("#textbox").focus();
   }, 10);
 };
-io.clickExit = function(dir) {
-  if (io.disableLevel)
-    return;
-  runCmd(dir);
-};
 io.clickItem = function(itemName) {
   if (io.disableLevel)
     return;
@@ -5276,60 +5271,7 @@ io.getItemHtml = function(item2, loc2, isSubItem, highlight) {
   return s;
 };
 io.createPanes = function() {
-  if (!["right", "left", "none"].includes(settings.panes)) {
-    console.error('ERROR: Your settings.panes value is "' + settings.panes + '". It must be one of "right", "left" or "none" (all lower-case). It is probably set in the file setiings.js.');
-    return;
-  }
-  if (settings.panes === "none")
-    return;
-  let html = "";
-  if (settings.compassPane) {
-    html += '<div class="pane-div">';
-    html += '<table id="compass-table">';
-    for (let i2 = 0; i2 < 3; i2++) {
-      html += "<tr>";
-      html += io.writeExit(0 + 5 * i2);
-      html += io.writeExit(1 + 5 * i2);
-      html += io.writeExit(2 + 5 * i2);
-      html += "<td></td>";
-      html += io.writeExit(3 + 5 * i2);
-      html += io.writeExit(4 + 5 * i2);
-      html += "</tr>";
-    }
-    html += "</table>";
-    html += "</div>";
-  }
-  if (settings.statusPane) {
-    html += '<div class="pane-div">';
-    html += io.getSidePaneHeadingHTML(settings.statusPane);
-    html += '<table id="status-pane">';
-    html += "</table>";
-    html += "</div>";
-  }
-  if (settings.inventoryPane) {
-    for (let inv of settings.inventoryPane) {
-      html += '<div class="pane-div">';
-      html += io.getSidePaneHeadingHTML(inv.name);
-      html += '<div class="item-list" id="' + inv.alt + '">';
-      html += "</div>";
-      html += "</div>";
-    }
-  }
-  html += '<div class="pane-div-finished">';
-  html += lang.game_over_html;
-  html += "</div>";
-  html += "</div>";
-  const el = document.createElement("div");
-  el.innerHTML = html;
-  el.setAttribute("id", "panes");
-  el.classList.add("side-panes");
-  el.classList.add("side-panes-" + settings.panes);
-  el.classList.add("panes-narrow");
-  const referenceNode = document.querySelector("#main");
-  referenceNode.parentNode.insertBefore(el, referenceNode.nextSibling);
   io.panesWidth = document.querySelector(".side-panes").clientWidth;
-  if (settings.customUI)
-    settings.customUI();
 };
 io.getSidePaneHeadingHTML = function(title) {
   if (!title)
@@ -5350,14 +5292,6 @@ io._clickSidePaneHeading = function(id) {
     el.style.display = "none";
   }
 };
-io.writeExit = function(n) {
-  let html = '<td class="compass-button" title="' + sentenceCase(lang.exit_list[n].name) + '">';
-  html += '<span class="compass-button" id="exit-' + lang.exit_list[n].name;
-  html += `" onclick="io.clickExit('` + lang.exit_list[n].name + `')">`;
-  html += settings.symbolsForCompass ? io.displayIconsCompass(lang.exit_list[n]) : lang.exit_list[n].abbrev;
-  html += "</span></td>";
-  return html;
-};
 io.getCommand = function(name2) {
   return commands.find(function(el) {
     return el.name === name2;
@@ -5376,7 +5310,6 @@ io.savedCommands = ["help"];
 io.savedCommandsPos = 0;
 io.init = function() {
   settings.performanceLog("Start io.onload");
-  io.createPanes();
   if (settings.playMode === "play")
     window.oncontextmenu = function() {
       return false;
@@ -5694,9 +5627,12 @@ io.setCssByClass = function(name2, prop, val) {
   for (const el of document.querySelectorAll("." + name2))
     el.style[prop] = val;
 };
-io.displayIconsCompass = function(exit) {
-  const datatransform = exit.rotate ? ' style="transform: rotate(40deg)"' : "";
-  return '<i class="fas ' + exit.symbol + '"' + datatransform + "></i>";
+io.compassIcon = function(exit) {
+  if (!settings.useCompassIcons) {
+    return exit.abbrev;
+  }
+  const transform = exit.rotate ? ' style="transform: rotate(40deg)"' : "";
+  return '<i class="fas ' + exit.symbol + '"' + transform + "></i>";
 };
 io.scrollToEnd = function() {
   if (settings.autoscroll)

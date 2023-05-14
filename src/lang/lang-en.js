@@ -661,7 +661,7 @@ export const lang = {
         metamsg("{b:User Interface:} To interact with an object, click on its name in the side pane, and a set of possible actions will appear under it. Click on the appropriate action.")
       }
       if (settings.compassPane) {
-        if (settings.symbolsForCompass) {
+        if (settings.useCompassIcons) {
           metamsg("You can also use the compass rose at the top to move around. Click the eye symbol, &#128065;, to look at you current location, the clock symbol to wait or &#128712; for help.")
         }
         else {

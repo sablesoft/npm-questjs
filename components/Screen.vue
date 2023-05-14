@@ -1,34 +1,66 @@
+<!--suppress ES6UnusedImports, JSUnresolvedVariable -->
 <script setup>
-import {onMounted, defineProps} from "vue";
-
-defineProps({
+import {onMounted, defineProps, ref} from "vue";
+import PaneCompass from './PaneCompass.vue';
+import PaneStatus from './PaneStatus.vue';
+import PaneInventory from './PaneInventory.vue';
+import PaneEnd from './PaneEnd.vue';
+const paneList = {
+    PaneCompass,
+    PaneStatus,
+    PaneInventory,
+    PaneEnd,
+}
+let props = defineProps({
     questjs: {
         type: Object,
         required: true,
     },
 });
-
-onMounted(() => {});
+let paneActive = function(pane) {
+    switch (pane) {
+        case PaneCompass:
+            return !!props.questjs.settings.compassPane;
+        case PaneStatus:
+            return !!props.questjs.settings.statusPane;
+        case PaneInventory:
+            return !!props.questjs.settings.inventoryPane;
+        case PaneEnd:
+            return false; // todo
+    }
+}
+let panes = ref(null);
+onMounted(() => {
+    props.questjs.io.panesWidth = panes.value.clientWidth;
+    console.log('Mounted Screen');
+});
 </script>
 <style>
-    @import "../assets/css/default.css";
+@import "../assets/css/default.css";
 </style>
 <template>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
           integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
-          crossorigin="anonymous" />
+          crossorigin="anonymous"/>
     <h1 id="loading">LOADING</h1>
 
     <div id="main">
         <div id="inner">
             <div id="output"></div>
             <!--suppress JSUnresolvedVariable -->
-            <div id="input" v-if="questjs.settings.textInput" >
+            <div id="input" v-if="questjs.settings.textInput">
                 <!--suppress JSUnresolvedVariable -->
                 <span id="cursor">{{ questjs.settings.cursor }}</span>
-                <input type="text" name="textbox" id="textbox" autocomplete="off" />
+                <input type="text" name="textbox" id="textbox" autocomplete="off"/>
             </div>
         </div>
+    </div>
+
+    <div id="panes" :class="'side-panes-' + questjs.settings.panes"
+         class="side-panes panes-narrow" style="display: block;" ref="panes">
+        <template v-for="pane in paneList">
+            <component v-if="paneActive(pane)" :is="pane" :questjs="questjs"></component>
+        </template>
     </div>
 
     <dialog id="dialog">

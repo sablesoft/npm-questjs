@@ -1229,12 +1229,6 @@ io.keydownForMenuFunction = function(e) {
   }, 10)
 }
 
-io.clickExit = function(dir) {
-  if (io.disableLevel) return
-  let failed = false
-  runCmd(dir)
-}
-
 io.clickItem = function(itemName) {
   if (io.disableLevel) return
   if (!itemName) return
@@ -1305,76 +1299,6 @@ io.getItemHtml = function(item, loc, isSubItem, highlight) {
   return s
 }
 
-// Creates the panes on the left or right
-// Should only be called once, when the page is first built
-io.createPanes = function() {
-  if (!['right', 'left', 'none'].includes(settings.panes)) {
-    console.error('ERROR: Your settings.panes value is "' + settings.panes + '". It must be one of "right", "left" or "none" (all lower-case). It is probably set in the file setiings.js.')
-    return
-  }
-
-  if (settings.panes === 'none') return
-
-  let html = ''
-
-  if (settings.compassPane) {
-    html += '<div class="pane-div">'
-    html += '<table id="compass-table">'
-    for (let i = 0; i < 3; i++) {
-      html += '<tr>'
-      // noinspection PointlessArithmeticExpressionJS
-      html += io.writeExit(0 + 5 * i)
-      html += io.writeExit(1 + 5 * i)
-      html += io.writeExit(2 + 5 * i)
-      html += '<td></td>'
-      html += io.writeExit(3 + 5 * i);
-      html += io.writeExit(4 + 5 * i);
-      html += '</tr>'
-    }
-    html += '</table>'
-    html += '</div>'
-  }
-
-  if (settings.statusPane) {
-    html += '<div class="pane-div">'
-    html += io.getSidePaneHeadingHTML(settings.statusPane)
-    html += '<table id="status-pane">'
-    html += '</table>'
-    html += '</div>'
-  }
-
-  if (settings.inventoryPane) {
-    for (let inv of settings.inventoryPane) {
-      html += '<div class="pane-div">'
-      html += io.getSidePaneHeadingHTML(inv.name)
-      html += '<div class="item-list" id="' + inv.alt + '">'
-      html += '</div>'
-      html += '</div>'
-    }
-  }
-
-  html += '<div class="pane-div-finished">'
-  html += lang.game_over_html
-  html += '</div>'
-  html += '</div>'
-
-  const el = document.createElement("div")
-  el.innerHTML = html
-  el.setAttribute("id", "panes")
-  el.classList.add('side-panes')
-  el.classList.add('side-panes-' + settings.panes)
-  el.classList.add('panes-narrow')
-
-  const referenceNode = document.querySelector('#main')
-  referenceNode.parentNode.insertBefore(el, referenceNode.nextSibling)
-
-
-
-  io.panesWidth = document.querySelector('.side-panes').clientWidth
-
-  if (settings.customUI) settings.customUI();
-};
-
 io.getSidePaneHeadingHTML = function(title) {
   if (!title) return ''
   const id = verbify(title) + '-side-pane-heading'
@@ -1394,18 +1318,8 @@ io._clickSidePaneHeading = function(id) {
   else {
     el.style.display = 'none'
   }
-
-  //alert('here' + e.target.classList)
 }
 
-io.writeExit = function(n) {
-  let html = '<td class="compass-button" title="' + sentenceCase(lang.exit_list[n].name) + '">'
-  html += '<span class="compass-button" id="exit-' + lang.exit_list[n].name
-  html += '" onclick="io.clickExit(\'' + lang.exit_list[n].name + '\')">'
-  html += settings.symbolsForCompass ? io.displayIconsCompass(lang.exit_list[n]) : lang.exit_list[n].abbrev
-  html += '</span></td>'
-  return html
-};
 
 // Gets the command with the given name
 io.getCommand = function(name) {
@@ -1428,7 +1342,6 @@ io.savedCommandsPos = 0;
 // Called from scriptOnLoad in _settings.js, if there are no more scripts to load
 io.init = function() {
   settings.performanceLog('Start io.onload')
-  io.createPanes()
   if (settings.playMode === 'play') window.oncontextmenu = function () { return false }
   document.querySelector("#fileDialog").onchange = saveLoad.loadGameAsFile
 
@@ -1761,9 +1674,12 @@ io.setCssByClass = function(name, prop, val) {
 }
 
 // Display Icons for compass
-io.displayIconsCompass = function(exit) {
-  const datatransform = exit.rotate ? ' style="transform: rotate(40deg)"' : ''
-  return '<i class="fas ' + exit.symbol + '"' + datatransform + '></i>';
+io.compassIcon = function(exit) {
+    if (!settings.useCompassIcons) {
+        return exit.abbrev;
+    }
+  const transform = exit.rotate ? ' style="transform: rotate(40deg)"' : ''
+  return '<i class="fas ' + exit.symbol + '"' + transform + '></i>';
 }
 
 io.scrollToEnd = function() {

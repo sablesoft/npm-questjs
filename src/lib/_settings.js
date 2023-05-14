@@ -50,7 +50,7 @@ export const settings = {
   panes:'left',           //Can be set to Left, Right or None (setting PANES to None will more than double the speed of your game!)
   panesCollapseAt:700,
   compassPane:true,           // Set to true to have a compass world.
-  symbolsForCompass:true,
+  useCompassIcons:true,
   statusPane:"Status",    // Title of the panel; set to false to turn off
   statusWidthLeft:120,    // How wide the left column is in the status pane
   statusWidthRight:40,    // How wide the right column is in the status pane
