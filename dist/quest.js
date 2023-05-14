@@ -5280,9 +5280,6 @@ io.createPanes = function() {
     console.error('ERROR: Your settings.panes value is "' + settings.panes + '". It must be one of "right", "left" or "none" (all lower-case). It is probably set in the file setiings.js.');
     return;
   }
-  document.querySelector("#input").innerHTML = '<span id="cursor">' + settings.cursor + '</span><input type="text" name="textbox" id="textbox" autocomplete="off" />';
-  if (!settings.textInput)
-    document.querySelector("#input").style.display = "none";
   if (settings.panes === "none")
     return;
   let html = "";
