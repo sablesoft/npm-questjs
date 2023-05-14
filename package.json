@@ -5,7 +5,8 @@
     "type": "module",
     "files": [
         "dist",
-        "assets"
+        "assets",
+        "components"
     ],
     "main": "dist/quest.umd.cjs",
     "module": "dist/quest.js",
@@ -17,6 +18,10 @@
         "./assets/": {
             "import": "./assets/",
             "require": "./assets/"
+        },
+        "./components/": {
+            "import": "./components/",
+            "require": "./components/"
         }
     },
     "scripts": {
@@ -44,5 +49,8 @@
     "devDependencies": {
         "path": "^0.12.7",
         "vite": "^4.3.5"
+    },
+    "dependencies": {
+        "vue": "^3.3.2"
     }
 }
