@@ -1130,7 +1130,6 @@ io.updateUIItems = function() {
     if (!el) return
       el.innerHTML = settings.customPaneFunctions[key]()
   }
-  io.clickItem('')
 };
 
 io.updateStatus = function() {
@@ -1231,32 +1230,6 @@ io.keydownForMenuFunction = function(e) {
   }, 10)
 }
 
-io.clickItem = function(itemName) {
-  if (io.disableLevel) return
-  if (!itemName) return
-
-  const o = w[itemName]
-  if (o.sidebarButtonVerb) {
-    runCmd(o.sidebarButtonVerb + ' ' + w[itemName].alias)
-    return
-  }
-
- if (io.disableLevel) return;
-  // duplicated items would toggle twice
-  const uniq = [...new Set(io.currentItemList)];
-
-  for (let item of uniq) {
-    for (const el of document.querySelectorAll('.' + item + '-actions')) {
-      if (item === itemName) {
-        el.style.display = el.style.display === 'none' ? 'block' : 'none'
-      }
-      else {
-        el.style.display = 'none'
-      }
-    }
-  }
-};
-
 io.clickItemAction = function(itemName, action) {
   if (io.disableLevel) return
   const item = w[itemName];
@@ -1289,17 +1262,18 @@ io.getItemHtml = function(item, loc, isSubItem, highlight) {
   const verbList = item.getVerbs(loc)
   if (verbList === undefined) { errormsg("No verbs for " + item.name); console.log(item); }
 
-  let s = '<div id="' + item.name + '-item">' +
-      '<p class="item' + (isSubItem ? ' sub-item' : '') + (highlight ? ' highlight-item' + highlight : '') +
-      '" onclick="io.clickItem(\'' + item.name + '\')">' + io.getIcon(item) + item.getListAlias(loc) + "</p></div>"
+  let s = '<div id="' + item.name + '-item" class="item-wrapper">' +
+      '<p class="item' + (isSubItem ? ' sub-item' : '') + (highlight ? ' highlight-item' + highlight : '') + '">'
+      + io.getIcon(item) + item.getListAlias(loc) + "</p>"
   for (let verb of verbList) {
     if (typeof verb === 'string') verb = {name:verb, action:verb}
     s += '<div class="' + item.name + '-actions item-action'
-    if (verb.style) s += ' ' + verb.style
-    s += '" onclick="io.clickItemAction(\'' + item.name + '\', \'' + verb.action + '\')" style="display: none;">';
+    if (verb.style) s += ' ' + verb.style;
+    s += '" data-item="' + item.name + '" data-action="' + verb.action + '">';
     s += verb.name;
     s += '</div>';
   }
+  s += '</div>';
   return s
 }
 

@@ -5133,7 +5133,6 @@ io.updateUIItems = function() {
       return;
     el.innerHTML = settings.customPaneFunctions[key]();
   }
-  io.clickItem("");
 };
 io.updateStatus = function() {
   if (settings.panes !== "none" && settings.statusPane) {
@@ -5209,29 +5208,6 @@ io.keydownForMenuFunction = function(e) {
     document.querySelector("#textbox").focus();
   }, 10);
 };
-io.clickItem = function(itemName) {
-  if (io.disableLevel)
-    return;
-  if (!itemName)
-    return;
-  const o = w$1[itemName];
-  if (o.sidebarButtonVerb) {
-    runCmd(o.sidebarButtonVerb + " " + w$1[itemName].alias);
-    return;
-  }
-  if (io.disableLevel)
-    return;
-  const uniq = [...new Set(io.currentItemList)];
-  for (let item2 of uniq) {
-    for (const el of document.querySelectorAll("." + item2 + "-actions")) {
-      if (item2 === itemName) {
-        el.style.display = el.style.display === "none" ? "block" : "none";
-      } else {
-        el.style.display = "none";
-      }
-    }
-  }
-};
 io.clickItemAction = function(itemName, action) {
   if (io.disableLevel)
     return;
@@ -5262,17 +5238,18 @@ io.getItemHtml = function(item2, loc2, isSubItem, highlight) {
     errormsg("No verbs for " + item2.name);
     console.log(item2);
   }
-  let s = '<div id="' + item2.name + '-item"><p class="item' + (isSubItem ? " sub-item" : "") + (highlight ? " highlight-item" + highlight : "") + `" onclick="io.clickItem('` + item2.name + `')">` + io.getIcon(item2) + item2.getListAlias(loc2) + "</p></div>";
+  let s = '<div id="' + item2.name + '-item" class="item-wrapper"><p class="item' + (isSubItem ? " sub-item" : "") + (highlight ? " highlight-item" + highlight : "") + '">' + io.getIcon(item2) + item2.getListAlias(loc2) + "</p>";
   for (let verb of verbList) {
     if (typeof verb === "string")
       verb = { name: verb, action: verb };
     s += '<div class="' + item2.name + "-actions item-action";
     if (verb.style)
       s += " " + verb.style;
-    s += `" onclick="io.clickItemAction('` + item2.name + "', '" + verb.action + `')" style="display: none;">`;
+    s += '" data-item="' + item2.name + '" data-action="' + verb.action + '">';
     s += verb.name;
     s += "</div>";
   }
+  s += "</div>";
   return s;
 };
 io.getSidePaneHeadingHTML = function(title) {
