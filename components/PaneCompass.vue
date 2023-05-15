@@ -2,6 +2,9 @@
 <script setup>
 import {defineProps, onMounted} from "vue";
 const props = defineProps({
+    /**
+     * @type Object
+     */
     questjs: {
         type: Object,
         required: true
@@ -10,26 +13,42 @@ const props = defineProps({
 onMounted(() => {
    console.log('Mounted PaneCompass');
 });
-let exit = function (row, column) {
+let getExit = function (row, column) {
     return props.questjs.lang.exit_list[column + 5 * (row - 1)];
 }
 let title = function(row, column) {
-    return props.questjs.sentenceCase(exit(row, column).name);
+    return props.questjs.sentenceCase(getExit(row, column).name);
 }
 let click = function(row, column) {
     if (props.questjs.io.disableLevel) {
         return;
     }
-    let name = exit(row, column).name;
+    let name = getExit(row, column).name;
     props.questjs.runCmd(name);
 }
 let icon = function(row, column) {
-    let o = exit(row, column);
+    let exit = getExit(row, column);
     if (!props.questjs.settings.useCompassIcons) {
-        return o.abbrev;
+        return exit.abbrev;
     }
-    const transform = o.rotate ? ' style="transform: rotate(40deg)"' : ''
-    return '<i class="fas ' + o.symbol + '"' + transform + '></i>';
+    const transform = exit.rotate ? ' style="transform: rotate(40deg)"' : ''
+    return '<i class="fas ' + exit.symbol + '"' + transform + '></i>';
+}
+// todo - reactive doesn't work:
+let isActive = function(row, column) {
+    let exit = getExit(row, column);
+    if (!exit) {
+        return false;
+    }
+    /**
+     * @type DEFAULT_ROOM
+     */
+    let loc = props.guestjs.loc();
+    if (!loc) {
+        return false;
+    }
+    return loc.hasExit(exit.name, {excludeScenery:true}) ||
+        exit.type === 'nocmd';
 }
 </script>
 <style>
@@ -41,7 +60,7 @@ let icon = function(row, column) {
             <tr v-for="row in 3" :key="row">
                 <td v-for="column in [0, 1, 2]" :key="column"
                     class="compass-button" :title="title(row, column)">
-                    <span :id="'exit-' + exit(row, column).name"
+                    <span :id="'exit-' + getExit(row, column).name"
                           v-html="icon(row, column)"
                           class="compass-button"
                           @click="click(row, column)"
@@ -51,7 +70,7 @@ let icon = function(row, column) {
                 <td></td>
                 <td v-for="column in [3, 4]" :key="column"
                     class="compass-button" :title="title(row, column)">
-                    <span :id="'exit-' + exit(row, column).name"
+                    <span :id="'exit-' + getExit(row, column).name"
                           v-html="icon(row, column)"
                           class="compass-button"
                           @click="click(row, column)"

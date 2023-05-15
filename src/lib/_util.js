@@ -33,13 +33,10 @@ test.testing = false;
 // ## General Utility Functions
 //@UNDOC
 
-
-
 // If we try to do anything fancy with log we get this line number not the calling line
 export const log = console.log
 export const debuglog = (s) => { if (settings.playMode === 'dev' || settings.playMode === 'beta') { console.log(s) } }
 export const parserlog = (s) => { if (parser.debug) { console.log(s) } }
-
 
 //@DOC
 // Runs the given string as though the player typed it, including recording it in the output
@@ -48,17 +45,12 @@ export function runCmd(cmd) {
   parser.parse(cmd)
 }
 
-
 export function doOnce(o, s) {
   if (s === undefined) s = 'unspecifiedDoOnceFlag'
   if (o[s]) return false
   o[s] = true
   return true
 }
-
-
-
-
 
 export function c(str) {
   if (saveLoad.transcript) {
@@ -69,8 +61,6 @@ export function c(str) {
    return 'This function is designed for adding comments whilst recording a transcript. You have are not currently recording a transcript.'
   }
 }
-
-
 
 //@DOC
 // If the given attribute is a string it is printed, if it is a
@@ -99,11 +89,7 @@ export function printOrRun(char, item, attname, options) {
   }
 }
 
-
-
 export function verbify(s) { return s.toLowerCase().replace(/[^a-zA-Z0-9_]/g, '') }
-
-
 
 // ============  Random Utilities  =======================================
 //@DOC

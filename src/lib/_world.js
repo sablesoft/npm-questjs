@@ -37,7 +37,7 @@ export function createItem() {
     })
     delete o.convTopics
   }
-  if (o.player && !game.player) {
+  if (o.player) {
       setPlayer(o);
   }
 
@@ -227,6 +227,7 @@ export const world = {
 
     // check player found:
     player();
+    game.loc = w[player().loc];
 
     // Initialise all object
     for (let key in w) {

@@ -4667,8 +4667,9 @@ function askDiag(title, fn, submitButton) {
   return world.SUCCESS_NO_TURNSCRIPTS;
 }
 function endTurnUI(update) {
-  if (!loc$1())
+  if (!loc$1()) {
     return errormsg("currentLocation not set (" + (player() ? "but player is" : "nor is player") + ")");
+  }
   if (settings.panes !== "none" && update) {
     for (let exit of lang.exit_list) {
       const el = document.querySelector("#exit-" + exit.name);
@@ -5408,34 +5409,42 @@ function keyboardHandler(event) {
 }
 io.init = function() {
   settings.performanceLog("Start io.onload");
-  if (settings.playMode === "play")
-    window.oncontextmenu = function() {
+  if (settings.playMode === "play") {
+    window.oncontextmenu = () => {
       return false;
     };
-  if (settings.panes !== "none")
+  }
+  if (settings.panes !== "none") {
     io.textColour = document.querySelector(".side-panes").style.color;
+  }
   settings.performanceLog("UI built");
   endTurnUI(true);
   settings.performanceLog("endTurnUI completed");
-  if (document.querySelector("#loading"))
+  if (document.querySelector("#loading")) {
     document.querySelector("#loading").remove();
-  if (!settings.suppressTitle)
+  }
+  if (!settings.suppressTitle) {
     msgHeading(settings.title, 2);
-  if (settings.subtitle)
+  }
+  if (settings.subtitle) {
     msgHeading(settings.subtitle, 3);
+  }
   io.setTitleAndInit(settings.title);
-  if (settings.playMode === "beta")
+  if (settings.playMode === "beta") {
     lang.betaTestIntro();
+  }
   settings.performanceLog("Title/intro printed");
   if (settings.startingDialogEnabled) {
     settings.setUpDialog();
     setTimeout(function() {
-      if (settings.startingDialogInit)
+      if (settings.startingDialogInit) {
         settings.startingDialogInit();
+      }
     }, 10);
   } else {
-    if (settings.startingDialogAlt)
+    if (settings.startingDialogAlt) {
       settings.startingDialogAlt();
+    }
     settings.delayStart = false;
     world.begin();
   }
@@ -12079,7 +12088,7 @@ function createItem() {
     });
     delete o.convTopics;
   }
-  if (o.player && !game.player) {
+  if (o.player) {
     setPlayer(o);
   }
   return o;
@@ -12237,6 +12246,7 @@ const world = {
   init: function() {
     settings.performanceLog("Start world.init");
     player();
+    game.loc = w$1[player().loc];
     for (let key in w$1) {
       world.initItem(w$1[key]);
     }

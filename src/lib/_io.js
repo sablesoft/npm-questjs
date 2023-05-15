@@ -593,7 +593,9 @@ export function askDiag(title, fn, submitButton) {
 
 // This should be called after each turn to ensure we are at the end of the page and the text box has the focus
 export function endTurnUI(update) {
-  if (!loc()) return errormsg("currentLocation not set (" + (player() ? 'but player is' : 'nor is player') + ")")
+  if (!loc()) {
+      return errormsg("currentLocation not set (" + (player() ? 'but player is' : 'nor is player') + ")");
+  }
   if (settings.panes !== 'none' && update) {
     // set the lang.exit_list
     for (let exit of lang.exit_list) {
@@ -1287,7 +1289,9 @@ io.getItemHtml = function(item, loc, isSubItem, highlight) {
   const verbList = item.getVerbs(loc)
   if (verbList === undefined) { errormsg("No verbs for " + item.name); console.log(item); }
 
-  let s = '<div id="' + item.name + '-item"><p class="item' + (isSubItem ? ' sub-item' : '') + (highlight ? ' highlight-item' + highlight : '') + '" onclick="io.clickItem(\'' + item.name + '\')">' + io.getIcon(item) + item.getListAlias(loc) + "</p></div>"
+  let s = '<div id="' + item.name + '-item">' +
+      '<p class="item' + (isSubItem ? ' sub-item' : '') + (highlight ? ' highlight-item' + highlight : '') +
+      '" onclick="io.clickItem(\'' + item.name + '\')">' + io.getIcon(item) + item.getListAlias(loc) + "</p></div>"
   for (let verb of verbList) {
     if (typeof verb === 'string') verb = {name:verb, action:verb}
     s += '<div class="' + item.name + '-actions item-action'
@@ -1437,31 +1441,46 @@ export function keyboardHandler(event) {
     }
 }
 
-// Called from scriptOnLoad in _settings.js, if there are no more scripts to load
+/**
+ * Called from settings->run
+ */
 io.init = function() {
-  settings.performanceLog('Start io.onload')
-  if (settings.playMode === 'play') window.oncontextmenu = function () { return false }
-
-  if (settings.panes !== 'none') io.textColour = document.querySelector(".side-panes").style.color
-
-  settings.performanceLog('UI built')
+  settings.performanceLog('Start io.onload');
+  if (settings.playMode === 'play') {
+      window.oncontextmenu =  () => { return false; }
+  }
+  if (settings.panes !== 'none') {
+      io.textColour = document.querySelector(".side-panes").style.color
+  }
+  settings.performanceLog('UI built');
   endTurnUI(true)
   settings.performanceLog('endTurnUI completed')
-
-  if (document.querySelector('#loading')) document.querySelector('#loading').remove()
-  if (!settings.suppressTitle) msgHeading(settings.title, 2)
-  if (settings.subtitle) msgHeading(settings.subtitle, 3)
+  if (document.querySelector('#loading')) {
+      document.querySelector('#loading').remove();
+  }
+  if (!settings.suppressTitle) {
+      msgHeading(settings.title, 2)
+  }
+  if (settings.subtitle) {
+      msgHeading(settings.subtitle, 3)
+  }
   io.setTitleAndInit(settings.title)
-  if (settings.playMode === 'beta') lang.betaTestIntro()
+  if (settings.playMode === 'beta') {
+      lang.betaTestIntro()
+  }
   settings.performanceLog('Title/intro printed')
 
   if (settings.startingDialogEnabled) {
     settings.setUpDialog()
     setTimeout(function() {
-      if (settings.startingDialogInit) settings.startingDialogInit()
+      if (settings.startingDialogInit) {
+          settings.startingDialogInit()
+      }
     }, 10)
   } else {
-    if (settings.startingDialogAlt) settings.startingDialogAlt()
+    if (settings.startingDialogAlt) {
+        settings.startingDialogAlt()
+    }
     settings.delayStart = false
     world.begin()
   }

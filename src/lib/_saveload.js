@@ -92,9 +92,6 @@ export const saveLoad = {
   },
 
 
-
-
-
   // LOAD
 
   // This function will be attached to #fileDialog as its "onchange" event
